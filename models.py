@@ -203,6 +203,7 @@ metro_locations = [parse_coordinates(loc) for loc in metro_locations_raw]
 
 class ReturnData(BaseModel):
     area: float = 0
+    location: GeographicPoint
     distance_to_metro: float = 0
     build_year: int | None = None
     has_parking: bool = False
@@ -219,7 +220,7 @@ class ReturnData(BaseModel):
                 **property_data.model_dump(),
                 "area": float(property_data.area.replace(",", ".").replace("\xa0", "")),
                 "price": float(property_data.price.amount),
-                "location": None,
+                "location": property_data.location.map.center,
             }
         )
         with suppress(StopIteration):
